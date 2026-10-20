@@ -12,10 +12,10 @@ body {
     padding: 50px;
 }
 
-/* Könyvtáblázat */
+
 
 #konyvTabla {
-    display: none; /* a gomb jeleníti meg */
+    display: none; 
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
@@ -65,7 +65,7 @@ tbody tr:last-child td {
     border-bottom: none;
 }
 
-/* Táblázatban lévő műveletgombok */
+
 
 td button {
     background: #eef2ff;
@@ -93,7 +93,7 @@ td button:disabled {
     cursor: not-allowed;
 }
 
-/* Törlés gomb: piros */
+
 
 td button.torles {
     background: #fee2e2;
@@ -103,8 +103,6 @@ td button.torles {
 td button.torles:hover {
     background: #fecaca;
 }
-
-/* Alsó gombok */
 
 #gombok {
     display: flex;
@@ -159,10 +157,8 @@ td button.torles:hover {
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
 
-/* Új könyv űrlap */
-
 #ujKonyvUrlap {
-    display: none; /* az Új könyv gomb jeleníti meg */
+    display: none; 
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
