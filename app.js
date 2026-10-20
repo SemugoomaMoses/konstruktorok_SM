@@ -1,10 +1,11 @@
 class Konyv {
-    constructor(cim, szerzo, kiadasiEv, oldalSzam) {
+    constructor(cim, szerzo, kiadasiEv, oldalSzam, kategoria, kolcsonozve = false) {
         this.cim = cim;
         this.szerzo = szerzo;
         this.kiadasiEv = kiadasiEv;
         this.oldalSzam = oldalSzam;
-        this.kolcsonozve = false;
+        this.kategoria = kategoria;
+        this.kolcsonozve = kolcsonozve;
     }
 
     kolcsonoz() {
@@ -16,58 +17,164 @@ class Konyv {
     }
 }
 
-const egricsillagok = new Konyv("Egri csillagok", "Gárdonyi Géza", 1899, 650);
-const aranyember = new Konyv("Az arany ember", "Jókai Mór", 1872, 576);
-const Romeo_es_Julia = new Konyv("Romeo és Júlia", "Shakespeare", 1597, 320);
+let konyvek = [];
+konyvek.push(new Konyv("Egri csillagok", "Gárdonyi Géza", 1899, 650, "Történelmi"));
+konyvek.push(new Konyv("Az arany ember", "Jókai Mór", 1872, 576, "Regény"));
+konyvek.push(new Konyv("Romeo és Júlia", "Shakespeare", 1597, 320, "Regény"));
+konyvek.push(new Konyv("A Pál utcai fiúk", "Molnár Ferenc", 1906, 200, "Regény", true));
 
-const konyvek = [egricsillagok, aranyember, Romeo_es_Julia];
+let csakSzabad = false;
+let kategoria = "";
 
-function osszesKonyv() {
-    const tabla = document.getElementById("konyvTabla");
-    const tbody = document.querySelector("#konyvTabla tbody");
 
-    tabla.style.display = "block";
+function tablaKirajzol() {
+    document.getElementById("konyvTabla").style.display = "block";
+    let tbody = document.querySelector("#konyvTabla tbody");
     tbody.innerHTML = "";
 
-    for (const konyv of konyvek) {
-        const sor = document.createElement("tr");
+    for (let i = 0; i < konyvek.length; i++) {
+        let k = konyvek[i];
+        let kiir = true;
 
-        for (const adat of [konyv.cim, konyv.szerzo, konyv.kiadasiEv, konyv.oldalSzam]) {
-            const cella = document.createElement("td");
-            cella.textContent = adat;
-            sor.appendChild(cella);
+
+        if (csakSzabad == true && k.kolcsonozve == true) {
+            kiir = false;
         }
 
-        const allapotCella = document.createElement("td");
-        allapotCella.textContent = konyv.kolcsonozve ? "igen" : "nem";
-        sor.appendChild(allapotCella);
 
-        const muveletCella = document.createElement("td");
+        if (kategoria != "" && k.kategoria != kategoria) {
+            kiir = false;
+        }
 
-        const kolcsonzesGomb = document.createElement("button");
-        kolcsonzesGomb.textContent = "Kölcsönzés";
-        kolcsonzesGomb.disabled = konyv.kolcsonozve;
-        kolcsonzesGomb.addEventListener("click", () => {
-            konyv.kolcsonoz();
-            osszesKonyv();
-        });   
+        if (kiir == true) {
+            let kolcsonozveSzoveg = "nem";
+            let kolcsonzesGomb = "";
+            let visszahozasGomb = " disabled";
 
-        const visszahozasGomb = document.createElement("button");
-        visszahozasGomb.textContent = "Visszahozás";
-        visszahozasGomb.disabled = !konyv.kolcsonozve;
-        visszahozasGomb.addEventListener("click", () => {
-            konyv.visszahoz();
-            osszesKonyv();
-        });
+            if (k.kolcsonozve == true) {
+                kolcsonozveSzoveg = "igen";
+                kolcsonzesGomb = " disabled";
+                visszahozasGomb = "";
+            }
 
-        muveletCella.appendChild(kolcsonzesGomb);
-        muveletCella.appendChild(visszahozasGomb);
-        sor.appendChild(muveletCella);
+            tbody.innerHTML = tbody.innerHTML +
+                "<tr>" +
+                "<td>" + k.cim + "</td>" +
+                "<td>" + k.szerzo + "</td>" +
+                "<td>" + k.kiadasiEv + "</td>" +
+                "<td>" + k.oldalSzam + "</td>" +
+                "<td>" + k.kategoria + "</td>" +
+                "<td>" + kolcsonozveSzoveg + "</td>" +
+                "<td>" +
+                "<button onclick='kolcsonzes(" + i + ")'" + kolcsonzesGomb + ">Kölcsönzés</button>" +
+                "<button onclick='visszahozas(" + i + ")'" + visszahozasGomb + ">Visszahozás</button>" +
+                "<button class='torles' onclick='torles(" + i + ")'>Törlés</button>" +
+                "</td>" +
+                "</tr>";
+        }
+    }
+}
 
-        tbody.appendChild(sor);
-    }  
-}       
+function osszesKonyv() {
+    csakSzabad = false;
+    tablaKirajzol();
+}
+
+function szabadKonyvek() {
+    csakSzabad = true;
+    tablaKirajzol();
+}
+
+function kategoriaSzures() {
+    kategoria = document.getElementById("kategoriaValaszto").value;
+    tablaKirajzol();
+}
+
+function kolcsonzes(i) {
+    konyvek[i].kolcsonoz();
+    tablaKirajzol();
+}
+
+function visszahozas(i) {
+    konyvek[i].visszahoz();
+    tablaKirajzol();
+}
+
+function torles(i) {
+    konyvek.splice(i, 1);
+    tablaKirajzol();
+}
 
 
+function urlapMegjelenit() {
+    let urlap = document.getElementById("ujKonyvUrlap");
+    if (urlap.style.display == "flex") {
+        urlap.style.display = "none";
+    } else {
+        urlap.style.display = "flex";
+    }
+}
+
+function konyvHozzaad() {
+    let cim = document.getElementById("cimInput").value;
+    let szerzo = document.getElementById("szerzoInput").value;
+    let ev = Number(document.getElementById("evInput").value);
+    let oldal = Number(document.getElementById("oldalInput").value);
+    let kat = document.getElementById("kategoriaInput").value;
+
+    if (cim == "" || szerzo == "" || ev == 0 || oldal == 0 || kat == "") {
+        alert("Minden mezőt ki kell tölteni!");
+        return;
+    }
+
+    konyvek.push(new Konyv(cim, szerzo, ev, oldal, kat));
 
 
+    document.getElementById("cimInput").value = "";
+    document.getElementById("szerzoInput").value = "";
+    document.getElementById("evInput").value = "";
+    document.getElementById("oldalInput").value = "";
+    document.getElementById("kategoriaInput").value = "";
+    document.getElementById("ujKonyvUrlap").style.display = "none";
+
+    tablaKirajzol();
+}
+
+function legregebbiKonyv() {
+    let legregebbi = konyvek[0];
+
+    for (let i = 1; i < konyvek.length; i++) {
+        if (konyvek[i].kiadasiEv < legregebbi.kiadasiEv) {
+            legregebbi = konyvek[i];
+        }
+    }
+
+    document.getElementById("eredmeny").innerHTML =
+        "<strong>Legrégebbi könyv:</strong><br>" + legregebbi.cim + " (" + legregebbi.kiadasiEv + ")";
+}
+
+function legvastagabbKonyv() {
+    let legvastagabb = konyvek[0];
+
+    for (let i = 1; i < konyvek.length; i++) {
+        if (konyvek[i].oldalSzam > legvastagabb.oldalSzam) {
+            legvastagabb = konyvek[i];
+        }
+    }
+
+    document.getElementById("eredmeny").innerHTML =
+        "<strong>Legvastagabb könyv:</strong><br>" + legvastagabb.cim + " (" + legvastagabb.oldalSzam + " oldal)";
+}
+
+function atlagosOldalszam() {
+    let osszeg = 0;
+
+    for (let i = 0; i < konyvek.length; i++) {
+        osszeg = osszeg + konyvek[i].oldalSzam;
+    }
+
+    let atlag = Math.round(osszeg / konyvek.length);
+
+    document.getElementById("eredmeny").innerHTML =
+        "<strong>Átlagos oldalszám:</strong> " + atlag + " oldal";
+}

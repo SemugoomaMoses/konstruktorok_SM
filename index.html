@@ -1,37 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>Könyvtár</title>
 </head>
 <body>
     <div id="konyvTabla">
         <table>
-        <thead>
-            <tr>
-                <th>Cím</th>
-                <th>Szerző</th>
-                <th>Kiadás éve</th>
-                <th>Oldalszám</th>
-                <th>Kölcsönözve</th>
-                <th>Művelet</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+            <thead>
+                <tr>
+                    <th>Cím</th>
+                    <th>Szerző</th>
+                    <th>Kiadás éve</th>
+                    <th>Oldalszám</th>
+                    <th>Kategória</th>
+                    <th>Kölcsönözve</th>
+                    <th>Művelet</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
-    
 
     <div id="gombok">
-
         <button onclick="osszesKonyv()">Összes könyv</button>
-        <button onclick="newKonyv()">Új könyv</button>
+        <button onclick="szabadKonyvek()">Szabad könyvek</button>
+        <button onclick="legregebbiKonyv()">Legrégebbi könyv</button>
+        <button onclick="legvastagabbKonyv()">Legvastagabb könyv</button>
+        <button onclick="atlagosOldalszam()">Átlagos oldalszám</button>
+        <button onclick="urlapMegjelenit()">Új könyv</button>
 
+        <select id="kategoriaValaszto" onchange="kategoriaSzures()">
+            <option value="">Összes kategória</option>
+            <option value="Regény">Regény</option>
+            <option value="Sci-fi">Sci-fi</option>
+            <option value="Történelmi">Történelmi</option>
+            <option value="Fantasy">Fantasy</option>
+        </select>
     </div>
 
-    
+    <div id="ujKonyvUrlap">
+        <input type="text" id="cimInput" placeholder="Cím">
+        <input type="text" id="szerzoInput" placeholder="Szerző">
+        <input type="number" id="evInput" placeholder="Kiadás éve">
+        <input type="number" id="oldalInput" placeholder="Oldalszám">
+        <select id="kategoriaInput">
+            <option value="">Kategória</option>
+            <option value="Regény">Regény</option>
+            <option value="Sci-fi">Sci-fi</option>
+            <option value="Történelmi">Történelmi</option>
+            <option value="Fantasy">Fantasy</option>
+        </select>
+        <button onclick="konyvHozzaad()">Hozzáadás</button>
+    </div>
+
+    <div id="eredmeny"></div>
 
     <script src="app.js"></script>
 </body>
